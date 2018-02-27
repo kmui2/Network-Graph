@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Network | Label alignment</title>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+	<style type="text/css">
+		#mynetwork {
+			width: 100vw;
+			height: 100vh;
+			border: 1px solid lightgray;
+		}
+
+		p {
+			max-width: 600px;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<p>Labels of edges can be aligned to edges in various ways.</p>
+	<p>Text-alignment within node labels can be 'left' or 'center', other font alignments not implemented.</p>
+	<p>Label alignment (placement of label &quot;box&quot;) for nodes (top, bottom, left, right, inside) is planned but not in
+		vis yet.</p>
+	<p>The click event is captured and displayed to illustrate how the clicking on labels works. You can drag the nodes over each
+		other to see how this influences the click event values.
+	</p>
+
+	<div id="mynetwork"></div>
+	<pre id="eventSpan"></pre>
+
+	<script type="text/javascript">
+
+		d3.csv('./Locus_aerospace_edges.csv', (edgesData) => {
+			d3.csv('./Locus_aerospace_nodes.csv', (nodeData) => {
+				let nodes = [];
+				nodeData.forEach((n) => {
+					nodes.push({
+						id: Number(n.id),
+						label: n.label
+					});
+				});
+				let edges = [];
+				edgesData.forEach((e) => {
+					edges.push({
+						from: e['Source '],
+						to: Number(e.Target),
+						arrows: {
+							to: {
+								enabled: true
+							}
+						},
+						label: e.Label,
+						font: { align: 'top' }
+					});
+				});
+
+				// create a network
+				var container = document.getElementById('mynetwork');
+				var data = {
+					nodes: nodes,
+					edges: edges
+				};
+				var options = {
+					nodes: {
+						shape: 'dot',
+						scaling: {
+							label: {
+								min: 8,
+								max: 20
+							}
+						}
+					}
+				};
+				var network = new vis.Network(container, data, options);
+
+				network.on("click", function (params) {
+					params.event = "[original event]";
+					document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+				});
+			})
+		})
+	</script>
+
+</body>
+
+</html>
