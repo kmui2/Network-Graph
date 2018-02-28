@@ -81,7 +81,20 @@
 								min: 8,
 								max: 20
 							}
+						},
+						color: {
+							highlight: '#000000'
 						}
+					},
+					edges: {
+						length: 100,
+						color: {
+							color:'#848484',
+							highlight:'#000000',
+							hover: '#000000',
+							inherit: 'from',
+							opacity:1.0
+						},
 					}
 				};
 				var network = new vis.Network(container, data, options);
