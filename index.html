@@ -43,7 +43,10 @@
 				nodeData.forEach((n) => {
 					nodes.push({
 						id: Number(n.id),
-						label: n.label
+						label: n.label,
+						title: Object.keys(n).map((k) => {
+							return k + ': ' + n[k];
+						}).join('<br>')
 					});
 				});
 				let edges = [];
@@ -83,6 +86,14 @@
 				network.on("click", function (params) {
 					params.event = "[original event]";
 					document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+				});
+
+				
+				network.on("showPopup", function (params) {
+					document.getElementById('eventSpan').innerHTML = '<h2>showPopup event: </h2>' + JSON.stringify(params, null, 4);
+				});
+				network.on("hidePopup", function () {
+					console.log('hidePopup Event');
 				});
 			})
 		})
